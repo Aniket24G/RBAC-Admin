@@ -42,6 +42,7 @@ const Table = ({
           ))}
         </tbody>
       </table>
+      {totalItems>0 ? (
       <div className="flex justify-between items-center mt-4">
         <div>
           Showing {currentPage * itemsPerPage - itemsPerPage + 1} to{" "}
@@ -52,19 +53,21 @@ const Table = ({
           <button
             disabled={currentPage === 1}
             onClick={() => onPageChange(currentPage - 1)}
-            className="px-4 py-2 bg-gray-300 rounded"
+            className="px-4 py-2 bg-gray-600 rounded disabled:bg-gray-300 text-white"
           >
             Prev
           </button>
           <button
             disabled={currentPage === totalPages}
             onClick={() => onPageChange(currentPage + 1)}
-            className="px-4 py-2 bg-gray-300 rounded"
+            className="px-4 py-2 bg-gray-600 rounded disabled:bg-gray-300 text-white"
           >
             Next
           </button>
         </div>
-      </div>
+      </div>)
+      : (<div>No Users Available</div>)
+      }
     </div>
   );
 };

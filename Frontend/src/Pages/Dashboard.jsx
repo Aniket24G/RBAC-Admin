@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import Modal from "../Components/Modal";
 import Table from "../Components/Table";
 
-
 const Dashboard = () => {
-  const [users,setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({
     username: "",
     role: "User",
@@ -12,73 +11,73 @@ const Dashboard = () => {
   });
 
   const [editUser, setEditUser] = useState(null);
-  const [showModal, setShowModal] = useState(false)
-
-  //pagination
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5;
-  //handle page change
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-  }
-  //pagination logic
-  const totalItems = users.length;
-  const totalPages = Math.ceil(totalItems/itemsPerPage)
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser)
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
     setUsers(storedUsers);
-  },[])
+  }, []);
+
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  //handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  //pagination logic
+  const totalItems = users.length;
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
   const handleInputChange = (e) => {
     e.preventDefault();
-    const {name, value} = e.target;
-    setNewUser({...newUser, [name]:value});
-    if(editUser) {
-      setEditUser({...editUser, [name]:value})
+    const { name, value } = e.target;
+    setNewUser({ ...newUser, [name]: value });
+    if (editUser) {
+      setEditUser({ ...editUser, [name]: value });
     }
-  }
+  };
 
   const addUser = () => {
     const userWithDefaultPassword = {
-      ...newUser, 
-      password: `${newUser.username}123`
+      ...newUser,
+      password: `${newUser.username}123`,
     };
 
     const updatedUsers = [...users, userWithDefaultPassword];
     setUsers(updatedUsers);
-    localStorage.setItem("users",JSON.stringify(updatedUsers));
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
     setShowModal(false);
-    setNewUser({username:"", role:"User", password:""})
+    setNewUser({ username: "", role: "User", password: "" });
   };
 
   const deleteUser = (username) => {
-    const updatedUsers = users.filter((u) => u.username!==username);
+    const updatedUsers = users.filter((u) => u.username !== username);
     setUsers(updatedUsers);
-    localStorage.setItem("users",JSON.stringify(updatedUsers))
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
   };
 
   const handleEditUser = (user) => {
-    setEditUser({...user});
+    setEditUser({ ...user });
     setShowModal(true);
-  }
+  };
 
   const saveEdits = () => {
-    const updateUsers = users.map((user) => 
-    user.username === editUser.username ? editUser: user);
+    const updateUsers = users.map((user) =>
+      user.username === editUser.username ? editUser : user
+    );
     setUsers(updateUsers);
-    localStorage.setItem("users",JSON.stringify(updateUsers));
+    localStorage.setItem("users", JSON.stringify(updateUsers));
     setShowModal(false);
     setEditUser(null);
-  }
+  };
 
   const closeModal = () => {
     setShowModal(false);
-    setEditUser(null)
-  }
+    setEditUser(null);
+  };
 
   const tableHeaders = ["Username", "Role"];
 
@@ -97,7 +96,7 @@ const Dashboard = () => {
         Edit
       </button>
     </>
-  )
+  );
 
   return (
     <div className="p-8">
@@ -113,40 +112,39 @@ const Dashboard = () => {
         headers={tableHeaders}
         data={currentUsers.map((user) => ({
           username: user.username,
-          role:user.role,
+          role: user.role,
         }))}
         actions={tableActions}
         currentPage={currentPage}
         itemspPerPage={itemsPerPage}
         totalItems={totalItems}
         onPageChange={handlePageChange}
-      >
+      ></Table>
 
-      </Table>
       {/* Add/Edit user modal */}
-        <Modal
-          showModal={showModal}
-          closeModal={closeModal}
-          onSubmit={editUser ? saveEdits: addUser}
-          title={editUser ? "Save changes":"Add User"}
+      <Modal
+        showModal={showModal}
+        closeModal={closeModal}
+        onSubmit={editUser ? saveEdits : addUser}
+        title={editUser ? "Save changes" : "Add User"}
+      >
+        <input
+          type="text"
+          name="username"
+          value={editUser ? editUser.username : newUser.username}
+          onChange={handleInputChange}
+          className="border px-4 py-2 w-full mb-4"
+        />
+        <select
+          name="role"
+          value={editUser ? editUser.role : newUser.role}
+          onChange={handleInputChange}
+          className="border px-4 py-2 w-full mb-4"
         >
-          <input 
-            type="text" 
-            name="username" 
-            value={editUser ? editUser.username : newUser.username}
-            onChange={handleInputChange}
-            className="border px-4 py-2 w-full mb-4"
-          />
-          <select
-           name="role"
-           value={editUser ? editUser.role: newUser.role}
-           onChange={handleInputChange}
-           className="border px-4 py-2 w-full mb-4"
-          >
-              <option value="User">User</option>
-              <option value="Admin">Admin</option>
-          </select>
-        </Modal>
+          <option value="User">User</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </Modal>
     </div>
   );
 };
