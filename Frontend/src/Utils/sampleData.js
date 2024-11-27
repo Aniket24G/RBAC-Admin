@@ -1,0 +1,63 @@
+export const sampleData = () => {
+    if(!localStorage.getItem("user")) {
+        const sampleUsers = [
+            {
+                username:"admin1",
+                password:"admin123",
+                role:"Admin",
+            },
+            {
+                username:"user1",
+                password:"user123",
+                role:"User"
+            },
+            {
+                username:"user2",
+                password:"user456",
+                role:"User"
+            },
+            {
+                username:"user3",
+                password:"user789",
+                role:"User"
+            },
+            {
+                username:"user4",
+                password:"user321",
+                role:"User"
+            },
+            {
+                username:"user5",
+                password:"user654",
+                role:"User"
+            },
+            {
+                username:"user6",
+                password:"user111",
+                role:"User"
+            },
+            {
+                username:"user7",
+                password:"user222",
+                role:"User"
+            },
+            {
+                username:"user8",
+                password:"user987",
+                role:"User"
+            },
+            {
+                username:"user9",
+                password:"user999",
+                role:"User"
+            },
+            {
+                username:"user10",
+                password:"user1010",
+                role:"User"
+            },
+
+        ]
+        localStorage.setItem("users",JSON.stringify(sampleUsers))
+    }
+}
